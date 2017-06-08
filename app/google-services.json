@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "600969737829",
+    "firebase_url": "https://locationdatacollector.firebaseio.com",
+    "project_id": "locationdatacollector",
+    "storage_bucket": "locationdatacollector.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600969737829:android:8fc9dd361729adae",
+        "android_client_info": {
+          "package_name": "com.droiddigger.lushan.locationdatacollector"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "600969737829-p46a28u60lu6eji0o2guqokq2a083e2m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.droiddigger.lushan.locationdatacollector",
+            "certificate_hash": "cb23987641df0ef271cd5716dc856ee8b2181767"
+          }
+        },
+        {
+          "client_id": "600969737829-20atqq3e9c9uht2niqoarcl8jtmqrbdj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHoYKF3qfoDvbipgkJRWsGi-G7p7ZesH4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "600969737829-20atqq3e9c9uht2niqoarcl8jtmqrbdj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

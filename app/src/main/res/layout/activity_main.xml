@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:listitem="http://schemas.android.com/apk/res-auto"
+    tools:context="com.droiddigger.lushan.locationdatacollector.MainActivity">
+
+
+    <Button
+        android:id="@+id/start_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:text="start service"
+        android:background="#00ff00"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_below="@+id/start_btn"
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/list_row"
+        />
+
+</RelativeLayout>
