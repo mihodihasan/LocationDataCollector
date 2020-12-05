@@ -8,23 +8,26 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -32,12 +35,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     BroadcastReceiver broadcastReceiver;
 
     private String mUsername;
-    private String ANONYMOUS = "USER";
+    private final String ANONYMOUS = "USER";
     private FirebaseUser user;
 
     @Override
@@ -92,14 +97,45 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "You Are Logged In! Welcome ", Toast.LENGTH_SHORT).show();
                     onSignedInInitialize(user.getDisplayName());
 //                    Log.d("useruser", user.getDisplayName().substring(0, user.getEmail().indexOf('@')));
+                    Query query = databaseReferenceRoot.child(mFirebaseAuth.getCurrentUser().getUid()).limitToLast(50);
+                    FirebaseRecyclerOptions<UserLocation> options =
+                            new FirebaseRecyclerOptions.Builder<UserLocation>()
+                                    .setQuery(query, UserLocation.class)
+                                    .build();
+                    recyclerAdapter = new FirebaseRecyclerAdapter<UserLocation, FirebaseVH>(options) {
+
+                        @NonNull
+                        @Override
+                        public FirebaseVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                            // Create a new instance of the ViewHolder, in this case we are using a custom
+                            // layout called R.layout.message for each item
+                            View view = LayoutInflater.from(parent.getContext())
+                                    .inflate(R.layout.list_row, parent, false);
+
+                            return new FirebaseVH(view);
+                        }
+
+                        @Override
+                        protected void onBindViewHolder(FirebaseVH holder, int position, UserLocation model) {
+                            // Bind the Chat object to the ChatHolder
+                            // ...
+                            holder.userTV.setText(model.getUsername());
+                            holder.timeTV.setText(model.getTimeStamp());
+                            holder.latitudeTV.setText(model.getLatitude());
+                            holder.longitudeTV.setText(model.getLatitude());
+                        }
+                    };
+                    recyclerView.setAdapter(recyclerAdapter);
                 } else {
                     //Signed out
                     onSignedOutCleanUp();
+                    List<AuthUI.IdpConfig> providers = Arrays.asList(
+                            new AuthUI.IdpConfig.GoogleBuilder().build());
                     startActivityForResult(
                             AuthUI.getInstance()
                                     .createSignInIntentBuilder()
                                     .setIsSmartLockEnabled(false)
-                                    .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                                    .setAvailableProviders(providers)
                                     .build(), RC_SIGN_IN);
                 }
             }
@@ -115,18 +151,20 @@ public class MainActivity extends AppCompatActivity {
         adapter = new Adapter(this, locations);
         recyclerView.setLayoutManager(manager);
 //        recyclerView.setAdapter(adapter);
-        Log.e("amarbaal", mFirebaseAuth.getCurrentUser().getUid());
-        recyclerAdapter = new FirebaseRecyclerAdapter<UserLocation, FirebaseVH>(UserLocation.class, R.layout.list_row,
-                FirebaseVH.class, databaseReferenceRoot.child(mFirebaseAuth.getCurrentUser().getUid())) {
-            @Override
-            protected void populateViewHolder(FirebaseVH viewHolder, UserLocation location, int position) {
-                viewHolder.userTV.setText(location.getUsername());
-                viewHolder.timeTV.setText(location.getTimeStamp());
-                viewHolder.latitudeTV.setText(location.getLatitude());
-                viewHolder.longitudeTV.setText(location.getLatitude());
-            }
-        };
-        recyclerView.setAdapter(recyclerAdapter);
+
+        if (mFirebaseAuth.getCurrentUser() != null){
+
+        }
+            /*recyclerAdapter = new FirebaseRecyclerAdapter<UserLocation, FirebaseVH>(UserLocation.class, R.layout.list_row,
+                    FirebaseVH.class, databaseReferenceRoot.child(Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid())) {
+                @Override
+                protected void populateViewHolder(FirebaseVH viewHolder, UserLocation location, int position) {
+                    viewHolder.userTV.setText(location.getUsername());
+                    viewHolder.timeTV.setText(location.getTimeStamp());
+                    viewHolder.latitudeTV.setText(location.getLatitude());
+                    viewHolder.longitudeTV.setText(location.getLatitude());
+                }
+            };*/
         attachDatabaseReadListener();
     }
 

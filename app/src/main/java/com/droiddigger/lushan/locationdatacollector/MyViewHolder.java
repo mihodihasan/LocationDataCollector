@@ -1,8 +1,9 @@
 package com.droiddigger.lushan.locationdatacollector;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by mihodihasan on 6/6/17.
